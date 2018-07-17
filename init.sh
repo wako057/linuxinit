@@ -83,4 +83,4 @@ else
 
 fi
 
-rm -Rf ./nuxminimal
+rm -Rf ./linuxinit
