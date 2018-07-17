@@ -21,42 +21,42 @@ if [ "$USER" == "root" ]; then
 
   if [ "$DISTRO" == "debian os" ]; then
     echo "on est debian os"
-    cp nuxminimal/bash_aliases_root ~/.bashrc
-    cp nuxminimal/git-bash-completion.sh ~/.git-bash-completion.sh
-    cp nuxminimal/git-prompt.sh ~/.git-prompt.sh
-    cp nuxminimal/vimrc ~/.vimrc
+    cp linuxinit/bash_aliases_root ~/.bashrc
+    cp linuxinit/git-bash-completion.sh ~/.git-bash-completion.sh
+    cp linuxinit/git-prompt.sh ~/.git-prompt.sh
+    cp linuxinit/vimrc ~/.vimrc
     if [ -d /home/debian/ ]; then
-        cp nuxminimal/bash_aliases_user /home/debian/.bash_aliases
-        cp nuxminimal/git-bash-completion.sh /home/debian/.git-bash-completion.sh
-        cp nuxminimal/git-prompt.sh /home/debian/.git-prompt.sh
-        cp nuxminimal/vimrc /home/debian/.vimrc
+        cp linuxinit/bash_aliases_user /home/debian/.bash_aliases
+        cp linuxinit/git-bash-completion.sh /home/debian/.git-bash-completion.sh
+        cp linuxinit/git-prompt.sh /home/debian/.git-prompt.sh
+        cp linuxinit/vimrc /home/debian/.vimrc
         chown -R debian:debian /home/debian/
     fi
   elif [ "$DISTRO" == "centos redhat system system" ]
   then
     echo "on est linux je pense a CentOs 6"
-    cp nuxminimal/bash_aliases_root ~/.bashrc
-    cp nuxminimal/git-bash-completion.sh ~/.git-bash-completion.sh
-    cp nuxminimal/git-prompt.sh ~/.git-prompt.sh
-    cp nuxminimal/vimrc ~/.vimrc
-    cp nuxminimal/bash_aliases_user /home/centos/.bashrc
-    cp nuxminimal/git-bash-completion.sh /home/centos/.git-bash-completion.sh
-    cp nuxminimal/git-prompt.sh /home/centos/.git-prompt.sh
-    cp nuxminimal/vimrc /home/centos/.vimrc
+    cp linuxinit/bash_aliases_root ~/.bashrc
+    cp linuxinit/git-bash-completion.sh ~/.git-bash-completion.sh
+    cp linuxinit/git-prompt.sh ~/.git-prompt.sh
+    cp linuxinit/vimrc ~/.vimrc
+    cp linuxinit/bash_aliases_user /home/centos/.bashrc
+    cp linuxinit/git-bash-completion.sh /home/centos/.git-bash-completion.sh
+    cp linuxinit/git-prompt.sh /home/centos/.git-prompt.sh
+    cp linuxinit/vimrc /home/centos/.vimrc
     chown -R centos:centos /home/centos
   elif [ "$DISTRO" == "alpine os" ]
   then
-    cp nuxminimal/bash_aliases_root /root/.bashrc
-    cp nuxminimal/git-bash-completion.sh /root/.git-bash-completion.sh
-    cp nuxminimal/git-prompt.sh /root/.git-prompt.sh
-    cp nuxminimal/vimrc /root/.vimrc
+    cp linuxinit/bash_aliases_root /root/.bashrc
+    cp linuxinit/git-bash-completion.sh /root/.git-bash-completion.sh
+    cp linuxinit/git-prompt.sh /root/.git-prompt.sh
+    cp linuxinit/vimrc /root/.vimrc
     echo "on est linux sur une alpine c'est du container"
   else 
     echo "on est linux je pense a une ubuntu"
-    cp nuxminimal/git-bash-completion.sh /root/.git-bash-completion.sh
-    cp nuxminimal/git-prompt.sh /root/.git-prompt.sh
-    cp nuxminimal/bash_aliases_root /root/.bash_aliases
-    cp nuxminimal/vimrc ~/.vimrc
+    cp linuxinit/git-bash-completion.sh /root/.git-bash-completion.sh
+    cp linuxinit/git-prompt.sh /root/.git-prompt.sh
+    cp linuxinit/bash_aliases_root /root/.bash_aliases
+    cp linuxinit/vimrc ~/.vimrc
 
   fi
 
