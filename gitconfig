@@ -1,0 +1,16 @@
+[user]
+	name =
+	email =
+[core]
+	excludesfile = /home/XXX/.gitignore
+	editor = vim
+[alias]
+    ch = checkout
+    st = status
+    br = branch -vv
+    amend = commit --amend
+    continue = rebase --continue
+    unstage = reset HEAD --
+ #   fixup = commit --fixup
+[color "branch"]
+    upstream = cyan
