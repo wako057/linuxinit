@@ -6,4 +6,5 @@ set tabstop=4
 set shiftwidth=4
 set autoindent
 set hlsearch
+set paste
 au BufEnter,BufRead *.conf setf dosini
