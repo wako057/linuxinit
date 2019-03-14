@@ -5,6 +5,7 @@
 	excludesfile = /home/XXX/.gitignore
 	editor = vim
 [alias]
+    co = commit
     ch = checkout
     st = status
     br = branch -vv
