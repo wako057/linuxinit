@@ -12,3 +12,5 @@ alias dockerdelete='docker stop `docker ps -aq` && docker rm `docker ps -aq`'
 alias dockerstop='docker stop `docker ps -aqf status=running`'
 alias dockerdelimage='docker rmi -f $(docker images -q)'
 alias dockerfclean='docker stop `docker ps -aqf status=running` && docker volume rm `docker volume ls -q` && docker rm `docker ps -aq` && docker rmi -f $(docker images -q)'
+
+alias sshdocker='docker exec -i -t '
