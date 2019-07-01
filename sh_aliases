@@ -1,6 +1,6 @@
 # aliases cross shell
-alias l='ls -lh --color=auto'
-alias la='ls -lha --color=auto'
+alias l='ls -lh --color=auto --group-directories-first'
+alias la='ls -lha --color=auto --group-directories-first'
 alias vi='vim'
 
 alias grep='grep --color=auto'
