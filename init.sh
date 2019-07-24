@@ -69,14 +69,28 @@ if [ "$USER" == "root" ]; then
   echo "on set les droit sur /root/.ssh"
   chmod 700 /root/.ssh
 
+elif [ "$USER" == "vagrant" ]; then
+  echo "On est sur du vagrant :$USER"
+  if [ "$DISTRO" == "ubuntu" ]; then
+  echo "On est sur du $DISTRO" 
+
+
+    cp linuxinit/bash_aliases_user ~/.bash_aliases
+    cp linuxinit/vimrc .vimrc
+    cp linuxinit/gitconfig .gitconfig
+
+
+  fi
+
+
 else
 
-  cp nuxminimal/bash_aliases_user ~/.bash_aliases
-  sudo cp nuxminimal/bash_aliases_root /root/.bash_aliases
-  sudo cp nuxminimal/bash_aliases_root /root/.bash_aliases
-  sudo cp nuxminimal/git-bash-completion.sh /root/.git-bash-completion.sh
-  sudo cp nuxminimal/git-prompt.sh /root/.git-prompt.sh
-  cp nuxminimal/vimrc .vimrc
+  cp linuxinit/bash_aliases_user ~/.bash_aliases
+  sudo cp linuxinit/bash_aliases_root /root/.bash_aliases
+  sudo cp linuxinit/bash_aliases_root /root/.bash_aliases
+  sudo cp linuxinit/git-bash-completion.sh /root/.git-bash-completion.sh
+  sudo cp linuxinit/git-prompt.sh /root/.git-prompt.sh
+  cp linuxinit/vimrc .vimrc
   sudo cp .vimrc /root/
   mkdir .ssh && chmod 700 .ssh
   sudo mkdir /root/.ssh && sudo chmod 700 /root/.ssh
