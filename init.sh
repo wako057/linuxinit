@@ -72,7 +72,7 @@ if [ "$USER" == "root" ]; then
 
 elif [ "$USER" == "vagrant" ]; then
   echo "On est sur du vagrant :$USER"
-  if [ "$DISTRO" == "ubuntu" ]; then
+  if [ "$DISTRO" == "ubuntu" ] || [ "$DISTRO" == "debian os" ]; then
   echo "On est sur du $DISTRO" 
 
 
