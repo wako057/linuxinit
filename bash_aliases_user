@@ -7,14 +7,14 @@ alias vi='vim'
 
 alias grep='grep --color=auto'
 
-sshdocker(){
-    docker exec -it $1 bash -c "stty cols $COLUMNS rows $LINES && bash";
-}
-_sshdocker(){
-    COMPREPLY=( $(docker ps --format "{{.Names}}" -f name=$2) );
-}
-complete -F _sshdocker sshdocker;
-export -f sshdocker;
+#sshdocker(){
+#    docker exec -it $1 bash -c "stty cols $COLUMNS rows $LINES && bash";
+#}
+#_sshdocker(){
+#    COMPREPLY=( $(docker ps --format "{{.Names}}" -f name=$2) );
+#}
+#complete -F _sshdocker sshdocker;
+#export -f sshdocker;
 
 if [ -f ~/.git-bash-completion.sh ]; then
    . ~/.git-bash-completion.sh
