@@ -4,7 +4,7 @@ USER=`whoami`
 # Determine OS platform
 UNAME=$(uname | tr "[:upper:]" "[:lower:]")
 # If Linux, try to determine specific distribution
-    # If available, use LSB to identify distribution
+# If available, use LSB to identify distribution
 if [ "$UNAME" == "linux" ]; then
   if [ -f /etc/lsb-release -o -d /etc/lsb-release.d ]; then
       DISTRO=$(lsb_release -i | cut -d: -f2 | sed s/'^\t'//)
@@ -16,6 +16,7 @@ fi
 # For everything else (or if above failed), just use generic identifier
 [ "$DISTRO" == "" ] && DISTRO=$UNAME
 
+echo "On est l'utilisateur $USER sur une distribution $DISTRO"
 
 if [ "$USER" == "root" ]; then
 
