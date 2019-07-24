@@ -77,6 +77,7 @@ elif [ "$USER" == "vagrant" ]; then
 
 
     cp linuxinit/bash_aliases_user ~/.bash_aliases
+    cp linuxinit/sh_aliases ~/.sh_aliases
     cp linuxinit/vimrc .vimrc
     cp linuxinit/gitconfig .gitconfig
 
