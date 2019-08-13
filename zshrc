@@ -1,23 +1,15 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+export ZSH="/home/__USERNAME__/.oh-my-zsh"
 export PATH=$PATH:$(npm bin)
 export PATH=~/.local/bin:$PATH
 export TERM="xterm-256color"
 export WORKSPACE=~/projects
 
-# Path to your oh-my-zsh installation.
-#export ZSH="/home/greg/.oh-my-zsh"
-
+#ZSH_THEME="robbyrussell"
+ZSH_THEME="powerlevel9k/powerlevel9k"
 POWERLEVEL9K_MODE='nerdfont-complete'
 
-#ZSH_THEME="robbyrussell"
-#ZSH_THEME="random"
-#ZSH_THEME="cobalt2"
-#ZSH_THEME="powerlevel9k/powerlevel9k"
-
-plugins=(
-  git virtualenv
-)
+plugins=(git virtualenv)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -25,7 +17,6 @@ source $ZSH/oh-my-zsh.sh
 if [ -f ~/.sh_aliases ]; then
     . ~/.sh_aliases
 fi
-
 zstyle ':completion:*' menu select=2
 
 #CONFIGURATION DU PROMPT
@@ -47,6 +38,5 @@ export LC_ALL="fr_FR.UTF-8"
 export EDITOR='vim'
 
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm

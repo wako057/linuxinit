@@ -2,7 +2,7 @@
 	name =
 	email =
 [core]
-	excludesfile = /home/XXX/.gitignore
+	excludesfile = /home/__USERNAME__/.gitignore
 	editor = vim
 [alias]
     co = commit
