@@ -45,50 +45,57 @@ log () {
 }
 
 getDistro() {
-  local UNAME DISTRO
-  UNAME=$(uname | tr "[:upper:]" "[:lower:]")
+    local UNAME DISTRO
+    UNAME=$(uname | tr "[:upper:]" "[:lower:]")
 
-  if [ "$UNAME" == "linux" ]; then
-    if [ -f /etc/lsb-release ] && [ -d /etc/lsb-release.d ]; then
-        DISTRO=$(lsb_release -i | cut -d: -f2 | sed s/'^\t'//)
-      else # Otherwise, use release info file
-      # shellcheck disable=SC2010
-        DISTRO=$(ls -d /etc/[A-Za-z]*[_-][rv]e[lr]* | grep -v "lsb" | cut -d'/' -f3 | cut -d'-' -f1 | cut -d'_' -f1)
+    if [ "$UNAME" == "linux" ]; then
+        if [ -f /etc/lsb-release ] && [ -d /etc/lsb-release.d ]; then
+            DISTRO=$(lsb_release -i | cut -d: -f2 | sed s/'^\t'//)
+        else # Otherwise, use release info file
+             # shellcheck disable=SC2010
+            DISTRO=$(ls -d /etc/[A-Za-z]*[_-][rv]e[lr]* | grep -v "lsb" | cut -d'/' -f3 | cut -d'-' -f1 | cut -d'_' -f1)
+        fi
+        DISTRO=$(echo "$DISTRO" | tr "[:upper:]" "[:lower:]" | tr '\n' ' ' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
     fi
-    DISTRO=$(echo "$DISTRO" | tr "[:upper:]" "[:lower:]" | tr '\n' ' ' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-  fi
-  log info "UNAME: [$UNAME]  -  Distro: [$DISTRO]"
-  echo "$DISTRO"
+    log info "UNAME: [$UNAME]  -  Distro: [$DISTRO]"
+    echo "$DISTRO"
 }
 
 copyRootBashrc() {
-  cp linuxinit/bash_aliases_root ~/.bashrc
+    log info "[copyRootBashrc]: On copy le bashrc Root"
+    cp linuxinit/bash_aliases_root ~/.bashrc
 }
 
 copyUserBashrc() {
-  cp linuxinit/bash_aliases_user ~/.bash_aliases
+    log info "[copyRootBashrc]: On copy le bashrc User"
+    cp linuxinit/bash_aliases_user ~/.bash_aliases
 }
 
 copyShAliases() {
-  cp linuxinit/sh_aliases ~/.sh_aliases
+    log info "[copyRootBashrc]: On copy le Sh_Aliases"
+    cp linuxinit/sh_aliases ~/.sh_aliases
 }
 
 copyVimrc() {
-  cp linuxinit/vimrc ~/.vimrc
+    log info "[copyRootBashrc]: On copy le Vimrc"
+    cp linuxinit/vimrc ~/.vimrc
 }
 
 copyPsqlRc() {
-  cp linuxinit/psqlrc ~/.psqlrc
+    log info "[copyRootBashrc]: On copy le PqlRc "
+    cp linuxinit/psqlrc ~/.psqlrc
 }
 
 copyZshrc() {
-  cp linuxinit/zshrc ~/.zshrc
-  sed -i 's/__USERNAME__/'"$USER"'/g' ~/.zshrc
+    log info "[copyRootBashrc]: On copy et on parametre le ZshRc"
+    cp linuxinit/zshrc ~/.zshrc
+    sed -i 's/__USERNAME__/'"$USER"'/g' ~/.zshrc
 }
 
 copyGitconfig() {
-  cp linuxinit/gitconfig ~/.gitconfig
-  sed -i 's/__USERNAME__/'"$USER"'/g' ~/.gitconfig
+    log info "[copyRootBashrc]: On copy et on parametre le GitConfig"
+    cp linuxinit/gitconfig ~/.gitconfig
+    sed -i 's/__USERNAME__/'"$USER"'/g' ~/.gitconfig
 }
 
 createConfigureSshRoot() {
@@ -104,8 +111,17 @@ createConfigureSshRoot() {
   fi
 }
 
-log info "On parametre le compte pour [$USER]"
 currentDistro=$(getDistro)
 
+log info "On parametre le compte pour [$USER]"
+if [ "$USER" == "root" ]; then
+    if [ "$DISTRO" == "debian os" ]; then
+        createConfigureSshRoot
+        copyRootBashrc
+        copyShAliases
+        copyVimrc
+        copyPsqlRc
+    fi
+fi
 
 echo "$currentDistro"
