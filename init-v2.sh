@@ -19,6 +19,8 @@ CYAN="\e[36m"
 #REVERSE=$(tput smso)
 #UNDERLINE=$(tput smul)
 
+
+
 log () {
     # Display log messages
     # :param: Log level : error, info or debug
@@ -64,24 +66,69 @@ getDistro() {
     echo "$DISTRO"
 }
 
+copyGitBashCompletion() {
+    log info "[copyGitBashCompletion]: On copy le bashrc User"
+    if [[ ! -f ~/.git-bash-completion.sh ]]
+    then
+        cp linuxinit/git-bash-completion.sh ~/.git-bash-completion.sh
+    else
+        log info "[copyUserBashrc][SKIP]: ~/.git-bash-completion.sh exist"
+    fi
+}
+
+copyGitBashPrompt() {
+    log info "[copyGitBashPrompt]: On copy le bashrc User"
+    if [[ ! -f ~/.git-prompt.sh ]]
+    then
+        cp linuxinit/git-prompt.sh ~/.git-prompt.sh
+    else
+        log info "[copyGitBashPrompt][SKIP]: ~/.git-prompt.sh exist"
+    fi
+}
+
+
 copyRootBashrc() {
     log info "[copyRootBashrc]: On copy le bashrc Root"
-    cp linuxinit/bash_aliases_root ~/.bashrc
+    if [[ ! -f ~/.bashrc ]]
+    then
+        cp linuxinit/bash_aliases_root ~/.bashrc
+    else
+        log info "[copyRootBashrc][SKIP]: ~/.bashrc exist - on insere dans bashrc"
+        echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]$(__git_ps1 "(%s)")\[\033[00m\] > '" >> ~/.bashrc
+        echo -e "if [ -f ~/.git-bash-completion.sh ]; then\n   . ~/.git-bash-completion.sh\nfi\n\n" >> ~/.bashrc
+        echo -e "if [ -f ~/.git-prompt.sh ]; then\n   . ~/.git-prompt.sh\nfi\n\n" >> ~/.bashrc
+        echo -e "if [ -f ~/.sh_aliases ]; then\n   . ~/.sh_aliases\nfi\n\n" >> ~/.bashrc
+    fi
 }
 
 copyUserBashrc() {
     log info "[copyUserBashrc]: On copy le bashrc User"
-    cp linuxinit/bash_aliases_user ~/.bash_aliases
+    if [[ ! -f ~/.bash_aliases ]]
+    then
+        cp linuxinit/bash_aliases_user ~/.bash_aliases
+    else
+        log info "[copyUserBashrc][SKIP]: ~/.bash_aliases exist"
+    fi
 }
 
 copyShAliases() {
     log info "[copyShAliases]: On copy le Sh_Aliases"
-    cp linuxinit/sh_aliases ~/.sh_aliases
+    if [[ ! -f ~/.sh_aliases ]]
+    then
+        cp linuxinit/sh_aliases ~/.sh_aliases
+    else
+        log info "[copyShAliases][SKIP]: ~/.sh_aliases exist"
+    fi
 }
 
 copyVimrc() {
     log info "[copyVimrc]: On copy le Vimrc"
-    cp linuxinit/vimrc ~/.vimrc
+    if [[ ! -f ~/.vimrc ]]
+    then
+        cp linuxinit/vimrc ~/.vimrc
+    else
+        log info "[copyVimrc][SKIP]: ~/.vimrc exist"
+    fi
 }
 
 copyPsqlRc() {
@@ -137,14 +184,25 @@ cleanup() {
 }
 
 currentDistro=$(getDistro)
+if [[ -z "$USER" ]] || [[ "$USER" == "" ]]
+then
+    USER=$(whoami)
+    log info "USER Not defined on essaye whoami [$USER]"
+else
+    log info "USER defined [$USER]"
+fi
+log info "---=== Debut de Configuration de becane pour [$USER] [$currentDistro] homeDir[$HOME] Uid: [$UID]===---"
 
-log info "---=== Debut de Configuration de becane pour [$USER] [$currentDistro] ===---"
+
+
 if [[ "$USER" == "root" ]]
 then
     if [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
     then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
         createConfigureSshRoot
+        copyGitBashCompletion
+        copyGitBashPrompt
         copyRootBashrc
         copyShAliases
         copyVimrc
@@ -156,6 +214,18 @@ then
 elif [[ "$USER" == "vagrant" ]]
 then
 
+    if [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
+    then
+        copyGitBashCompletion
+        copyGitBashPrompt
+        copyUserBashrc
+        copyShAliases
+        copyVimrc
+        copyPsqlRc
+    else
+        log info "On est sur une distro [$currentDistro] pour le [$USER] UNKONW"
+    fi
+else
     if [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
     then
         copyUserBashrc
