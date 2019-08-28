@@ -94,29 +94,40 @@ copyRootBashrc() {
         cp linuxinit/bash_aliases_root ~/.bashrc
     else
         log info "[copyRootBashrc][SKIP]: ~/.bashrc exist - on insere dans bashrc"
-        echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]$(__git_ps1 "(%s)")\[\033[00m\] > '" >> ~/.bashrc
         echo -e "if [ -f ~/.git-bash-completion.sh ]; then\n   . ~/.git-bash-completion.sh\nfi\n\n" >> ~/.bashrc
         echo -e "if [ -f ~/.git-prompt.sh ]; then\n   . ~/.git-prompt.sh\nfi\n\n" >> ~/.bashrc
         echo -e "if [ -f ~/.sh_aliases ]; then\n   . ~/.sh_aliases\nfi\n\n" >> ~/.bashrc
+        echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]$(__git_ps1 "(%s)")\[\033[00m\] > '" >> ~/.bashrc
     fi
 }
 
 copyUserBashrc() {
     log info "[copyUserBashrc]: On copy le bashrc User"
+    if [[ ! -f ~/.bashrc ]]
+    then
+        cp linuxinit/bash_aliases_user ~/.bashrc
+    else
+        log info "[copyUserBashrc][SKIP]: ~/.bashrc exist - on insere dans bashrc"
+    fi
+}
+
+
+copyUserBashAliases() {
+    log info "[copyUserBashAliases]: On copy le bash_aliases User"
 
     if [[ ! -f ~/.bashrc ]]
     then
-      log info "[copyUserBashrc][SKIP]: ~/.bashrc doesnt exist"
-        cp linuxinit/bash_aliases_user ~/.bashrc
+      log info "[copyUserBashAliases][INIT]: ~/.bashrc doesnt exist we create it"
+        cp linuxinit/bash_aliases_user ~/.bashrc || log info "[copyUserBashAliases][ERROR]: copy failed"
     else
-        log info "[copyUserBashrc][SKIP]: ~/.bashrc exist"
+        log info "[copyUserBashAliases][SKIP]: ~/.bashrc exist"
     fi
 
     if [[ ! -f ~/.bash_aliases ]]
     then
         cp linuxinit/bash_aliases_user ~/.bash_aliases
     else
-        log info "[copyUserBashrc][SKIP]: ~/.bash_aliases exist"
+        log info "[copyUserBashAliases][SKIP]: ~/.bash_aliases exist"
     fi
 }
 
@@ -189,10 +200,47 @@ createConfigureSshRoot() {
 
 cleanup() {
     log info "[cleanup]: On supprime le repertoire linuxinit"
-    rm -Rf ./linuxinit
+    rm -Rf ./linuxinit f
+}
+
+detectIfInContainer() {
+ local chk
+ chk=$(grep -E '/(lxc|docker)/[[:xdigit:]]{64}' /proc/1/cgroup | wc -l)
+ if [[ $chk -gt 0 ]]
+ then
+   log info "[detectIfInContainer]: On est dans un container"
+	 return 0
+ else
+   log info "[detectIfInContainer]: On est PAS dans un container"
+	 return 1
+ fi
+}
+
+
+getUserByUid() {
+  # Get the username of the Uid parameters
+  # :param: Uid
+  local name
+  name=$(getent passwd $1 | cut -d: -f1)
+  log info "[getUserByUid]: Le user avec l'uid [$1] est: [$name]"
+  echo "$name"
+}
+
+
+insertPS1BashBashrc() {
+  log info "[insertPS1BashBashrc]: Cas particulier on dirait, on force le bash.bashrc"
+
+  echo "########### CUSTOM /etc/bash.bashrc due to no healthy HOME ###########" >> /etc/bash.bashrc
+  echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]\[\033[00m\] > '" >> /etc/bash.bashrc
+  cat ./linuxinit/sh_aliases >> /etc/bash.bashrc
+#  echo -e "if [ -f ~/.git-bash-completion.sh ]; then\n   . ~/.git-bash-completion.sh\nfi\n\n" >> ~/.bashrc
+#  echo -e "if [ -f ~/.git-prompt.sh ]; then\n   . ~/.git-prompt.sh\nfi\n\n" >> ~/.bashrc
+#  echo -e "if [ -f ~/.sh_aliases ]; then\n   . ~/.sh_aliases\nfi\n\n" >> ~/.bashrc
 }
 
 currentDistro=$(getDistro)
+userUid1000=$(getUserByUid 1000)
+
 if [[ -z "$USER" ]] || [[ "$USER" == "" ]]
 then
     USER=$(whoami)
@@ -219,6 +267,11 @@ then
         log info "On est sur une distro [$currentDistro] pour le [$USER] UNKOWNW"
     fi
 
+    if [[ "$userUid1000" == "jenkins" ]] && detectIfInContainer
+    then
+      insertPS1BashBashrc
+    fi
+
 elif [[ "$USER" == "vagrant" ]]
 then
 
@@ -227,6 +280,7 @@ then
         copyGitBashCompletion
         copyGitBashPrompt
         copyUserBashrc
+        copyUserBashAliases
         copyShAliases
         copyVimrc
         copyPsqlRc
@@ -236,14 +290,26 @@ then
 else
     if [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
     then
+        copyGitBashPrompt
         copyUserBashrc
+        copyUserBashAliases
         copyShAliases
         copyVimrc
         copyPsqlRc
-    else
-        log info "On est sur une distro [$currentDistro] pour le [$USER] UNKONW"
+#    else
+#        log info "On est sur une distro [$currentDistro] pour le [$USER] UNKONW"
     fi
+
+    if detectIfInContainer && [[ "$USER" == "jenkins" ]]
+    then
+      echo "on est dans un container JENKINS ON on agit en consequence"
+      echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]\[\033[00m\] > '" >> /etc/bash.bashrc
+
+    fi
+
 fi
+
+
 
 cleanup
 log info "---=== Fin de Configuration de becane ===---"
