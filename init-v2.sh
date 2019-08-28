@@ -103,6 +103,15 @@ copyRootBashrc() {
 
 copyUserBashrc() {
     log info "[copyUserBashrc]: On copy le bashrc User"
+
+    if [[ ! -f ~/.bashrc ]]
+    then
+      log info "[copyUserBashrc][SKIP]: ~/.bashrc doesnt exist"
+        cp linuxinit/bash_aliases_user ~/.bashrc
+    else
+        log info "[copyUserBashrc][SKIP]: ~/.bashrc exist"
+    fi
+
     if [[ ! -f ~/.bash_aliases ]]
     then
         cp linuxinit/bash_aliases_user ~/.bash_aliases
@@ -191,9 +200,8 @@ then
 else
     log info "USER defined [$USER]"
 fi
-log info "---=== Debut de Configuration de becane pour [$USER] [$currentDistro] homeDir[$HOME] Uid: [$UID]===---"
 
-
+log info "---=== Debut de Configuration de becane pour User: [$USER] Distro: [$currentDistro] homeDir[$HOME] Uid: [$UID]===---"
 
 if [[ "$USER" == "root" ]]
 then
