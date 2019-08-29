@@ -3,8 +3,11 @@ alias l='ls -lh --color=auto --group-directories-first'
 alias la='ls -lha --color=auto --group-directories-first'
 alias vi='vim'
 
-alias grep='grep --color=auto'
-
+#[[ $(grep --color=auto 2>/dev/null) ]] && alias grep='grep --color=auto'
+if [[ $(grep --color=auto 2>/dev/null) ]]
+then
+    alias grep='grep --color=auto'
+fi
 alias dockup='docker-compose up'
 alias gitlog='git log --pretty=oneline -n 54'
 alias dockerdeldead='docker rm `docker ps -aqf  status=exited`'
