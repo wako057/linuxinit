@@ -35,7 +35,7 @@ log () {
                 prefix="$CYAN Info : "
             ;;
             debug)
-                prefix="$CYAN Debug : "
+                prefix="$GREEN Debug : "
             ;;
             *)
                 prefix=""
@@ -94,10 +94,12 @@ copyRootBashrc() {
         cp linuxinit/bash_aliases_root ~/.bashrc
     else
         log info "[copyRootBashrc][SKIP]: ~/.bashrc exist - on insere dans bashrc"
-        echo -e "if [ -f ~/.git-bash-completion.sh ]; then\n   . ~/.git-bash-completion.sh\nfi\n\n" >> ~/.bashrc
-        echo -e "if [ -f ~/.git-prompt.sh ]; then\n   . ~/.git-prompt.sh\nfi\n\n" >> ~/.bashrc
-        echo -e "if [ -f ~/.sh_aliases ]; then\n   . ~/.sh_aliases\nfi\n\n" >> ~/.bashrc
-        echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]$(__git_ps1 "(%s)")\[\033[00m\] > '" >> ~/.bashrc
+        {
+          echo -e "if [ -f ~/.git-bash-completion.sh ]; then\n   . ~/.git-bash-completion.sh\nfi\n\n"
+          echo -e "if [ -f ~/.git-prompt.sh ]; then\n   . ~/.git-prompt.sh\nfi\n\n"
+          echo -e "if [ -f ~/.sh_aliases ]; then\n   . ~/.sh_aliases\nfi\n\n"
+          echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]$(__git_ps1 "(%s)")\[\033[00m\] > '"
+        } >> ~/.bashrc
     fi
 }
 
@@ -205,7 +207,7 @@ cleanup() {
 
 detectIfInContainer() {
  local chk
- chk=$(grep -E '/(lxc|docker)/[[:xdigit:]]{64}' /proc/1/cgroup | wc -l)
+ chk=$(grep -cE '/(lxc|docker)/[[:xdigit:]]{64}' /proc/1/cgroup)
  if [[ $chk -gt 0 ]]
  then
    log info "[detectIfInContainer]: On est dans un container"
@@ -221,7 +223,7 @@ getUserByUid() {
   # Get the username of the Uid parameters
   # :param: Uid
   local name
-  name=$(getent passwd $1 | cut -d: -f1)
+  name=$(getent passwd "$1" | cut -d: -f1)
   log info "[getUserByUid]: Le user avec l'uid [$1] est: [$name]"
   echo "$name"
 }
@@ -230,9 +232,14 @@ getUserByUid() {
 insertPS1BashBashrc() {
   log info "[insertPS1BashBashrc]: Cas particulier on dirait, on force le bash.bashrc"
 
-  echo "########### CUSTOM /etc/bash.bashrc due to no healthy HOME ###########" >> /etc/bash.bashrc
-  echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]\[\033[00m\] > '" >> /etc/bash.bashrc
-  cat ./linuxinit/sh_aliases >> /etc/bash.bashrc
+  {
+    echo "########### CUSTOM /etc/bash.bashrc due to no healthy HOME ###########"
+    echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]\[\033[00m\] > '"
+    cat ./linuxinit/sh_aliases
+  } >> /etc/bash.bashrc
+
+
+
 #  echo -e "if [ -f ~/.git-bash-completion.sh ]; then\n   . ~/.git-bash-completion.sh\nfi\n\n" >> ~/.bashrc
 #  echo -e "if [ -f ~/.git-prompt.sh ]; then\n   . ~/.git-prompt.sh\nfi\n\n" >> ~/.bashrc
 #  echo -e "if [ -f ~/.sh_aliases ]; then\n   . ~/.sh_aliases\nfi\n\n" >> ~/.bashrc
