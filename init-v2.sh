@@ -253,7 +253,7 @@ log info "---=== Debut de Configuration de becane pour User: [$USER] Distro: [$c
 
 if [[ "$USER" == "root" ]]
 then
-    if [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
+    if [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]] || [[ "$currentDistro" == "alpine os" ]]
     then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
         createConfigureSshRoot
