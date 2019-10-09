@@ -95,7 +95,7 @@ copyGitBashCompletion() {
 }
 
 copyGitBashPrompt() {
-    log info "[copyGitBashPrompt]: On copy le bashrc User"
+    log info "[copyGitBashPrompt]: On copy le git-prompt"
     if [[ ! -f ~/.git-prompt.sh ]]
     then
         cp linuxinit/git-prompt.sh ~/.git-prompt.sh
@@ -104,6 +104,11 @@ copyGitBashPrompt() {
     fi
 }
 
+addUserGrouSudoers()
+{
+  # :param: User
+  RUN echo "$1 ALL=(ALL) NOPASSWD " >> /etc/sudoers
+}
 
 copyRootBashrc() {
     log info "[copyRootBashrc]: On copy le bashrc Root"
@@ -266,6 +271,9 @@ insertPS1BashBashrc() {
 currentDistro=$(getDistro)
 userUid1000=$(getUserByUid 1000)
 
+#echo $currentDistro
+#exit;
+
 if [[ -z "$USER" ]] || [[ "$USER" == "" ]]
 then
     USER=$(whoami)
@@ -288,6 +296,16 @@ then
         copyShAliases
         copyVimrc
         copyPsqlRc
+
+    elif [[ "$currentDistro" == "rhel" ]];
+    then
+        log info "On est sur une distro [$currentDistro] pour le [$USER]"
+        copyGitBashCompletion
+        copyGitBashPrompt
+        copyRootBashrc
+        copyShAliases
+        copyVimrc
+
     else
         log info "On est sur une distro [$currentDistro] pour le [$USER] UNKOWNW"
     fi
@@ -300,7 +318,7 @@ then
 elif [[ "$USER" == "vagrant" ]]
 then
 
-    if [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
+    if [[ "$currentDistro" == "debian" ]] || [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
     then
         copyGitBashCompletion
         copyGitBashPrompt
@@ -312,8 +330,9 @@ then
     else
         log info "On est sur une distro [$currentDistro] pour le [$USER] UNKONW"
     fi
+
 else
-    if [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
+    if [[ "$currentDistro" == "debian" ]] || [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
     then
         copyGitBashPrompt
         copyUserBashrc
@@ -321,6 +340,16 @@ else
         copyShAliases
         copyVimrc
         copyPsqlRc
+
+    elif [[ "$currentDistro" == "rhel" ]];
+    then
+        log info "On est sur une distro [$currentDistro] pour le [$USER]"
+        copyGitBashCompletion
+        copyUserBashrc
+        copyUserBashAliases
+        copyShAliases
+        copyVimrc
+
 #    else
 #        log info "On est sur une distro [$currentDistro] pour le [$USER] UNKONW"
     fi
@@ -336,5 +365,5 @@ fi
 
 
 
-cleanup
+#cleanup
 log info "---=== Fin de Configuration de becane ===---"
