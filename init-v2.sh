@@ -3,22 +3,6 @@
 RED="\e[31m"
 GREEN="\e[32m"
 CYAN="\e[36m"
-#BLACK=$(tput setaf 0)
-#RED=$(tput setaf 1)
-#GREEN=$(tput setaf 2)
-#YELLOW=$(tput setaf 3)
-#LIME_YELLOW=$(tput setaf 190)
-#POWDER_BLUE=$(tput setaf 153)
-#BLUE=$(tput setaf 4)
-#MAGENTA=$(tput setaf 5)
-#CYAN=$(tput setaf 6)
-#WHITE=$(tput setaf 7)
-#BRIGHT=$(tput bold)
-#NORMAL=$(tput sgr0)
-#BLINK=$(tput blink)
-#REVERSE=$(tput smso)
-#UNDERLINE=$(tput smul)
-
 
 
 log () {
@@ -46,25 +30,59 @@ log () {
     fi
 }
 
-getDistro() {
-    local UNAME DISTRO
-    UNAME=$(uname | tr "[:upper:]" "[:lower:]")
+#getDistro() {
+#    local UNAME DISTRO
+#    UNAME=$(uname | tr "[:upper:]" "[:lower:]")
+#
+#    if [ "$UNAME" == "linux" ]; then
+#        if [ -f /etc/lsb-release ] && [ -d /etc/lsb-release.d ]; then
+#            log info "On a trouve des informatiosn dans lsb-release"
+#            DISTRO=$(lsb_release -i | cut -d: -f2 | sed s/'^\t'//)
+#        else # Otherwise, use release info file
+#            log info "On a pas trouve lsb-release on regarde /etc/[a-z]-_version on /etc/[a-z]-_release"
+#             # shellcheck disable=SC2010
+#            DISTRO=$(ls -d /etc/[A-Za-z]*[_-][rv]e[lr]* | grep -v "lsb" | cut -d'/' -f3 | cut -d'-' -f1 | cut -d'_' -f1)
+#        fi
+#        log info "On forge un retour a peu pres coherent"
+#        DISTRO=$(echo "$DISTRO" | tr "[:upper:]" "[:lower:]" | tr '\n' ' ' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+#    fi
+#    log info "UNAME: [$UNAME]  -  Distro: [$DISTRO]"
+#    echo "$DISTRO"
+#}
 
-    if [ "$UNAME" == "linux" ]; then
-        if [ -f /etc/lsb-release ] && [ -d /etc/lsb-release.d ]; then
-            log info "On a trouve des informatiosn dans lsb-release"
-            DISTRO=$(lsb_release -i | cut -d: -f2 | sed s/'^\t'//)
-        else # Otherwise, use release info file
-            log info "On a pas trouve lsb-release on regarde /etc/[a-z]-_version on /etc/[a-z]-_release"
-             # shellcheck disable=SC2010
-            DISTRO=$(ls -d /etc/[A-Za-z]*[_-][rv]e[lr]* | grep -v "lsb" | cut -d'/' -f3 | cut -d'-' -f1 | cut -d'_' -f1)
-        fi
-        log info "On forge un retour a peu pres coherent"
-        DISTRO=$(echo "$DISTRO" | tr "[:upper:]" "[:lower:]" | tr '\n' ' ' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-    fi
-    log info "UNAME: [$UNAME]  -  Distro: [$DISTRO]"
-    echo "$DISTRO"
+# based on https://unix.stackexchange.com/questions/6345/how-can-i-get-distribution-name-and-version-number-in-a-simple-shell-script
+# modification for my usecase
+getDistro() {
+  local UNAME DISTRO
+  local OSFILE="/etc/os-release"
+  local LSBFILE="/etc/lsb-release"
+
+  if [ -f $OSFILE ];
+  then # freedesktop.org and systemd
+    DISTRO=$(grep "^ID=" /etc/os-release | tr -d '"' | sed -e 's/ID=//' | tr "[:upper:]" "[:lower:]")
+    log info "[getDistro]: On cat /etc/release"
+  elif type lsb_release >/dev/null 2>&1; then
+    DISTRO=$(lsb_release -i | cut -d: -f2 | sed s/'^\t'// | tr "[:upper:]" "[:lower:]")
+    log info "[getDistro]: On utilise la commande lsb_release"
+  elif [ -f /etc/lsb-release ]; then # For some versions of Debian/Ubuntu without lsb_release command
+    DISTRO=DISTRO=$(grep "^DISTRIB_ID=" /etc/os-release | sed -e 's/^DISTRIB_ID="//' -e 's/"$//')
+    log info "[getDistro]: On cat /etc/debian_version: Old debian $VER"
+  elif [ -f /etc/debian_version ]; then # Older Debian/Ubuntu/etc.
+    VER=$(cat /etc/debian_version)
+    log info "[getDistro]: On cat /etc/debian_version: Old debian $VER"
+    DISTRO="debian"
+#  elif [ -f /etc/SuSe-release ]; then
+      # Older SuSE/etc.
+#  elif [ -f /etc/redhat-release ]; then
+      # Older Red Hat, CentOS, etc.
+  else
+      OS=$(uname -s)
+      VER=$(uname -r)
+     DISTRO="$OS$VER"
+  fi
+  echo $DISTRO
 }
+
 
 copyGitBashCompletion() {
     log info "[copyGitBashCompletion]: On copy le bashrc User"
@@ -77,7 +95,7 @@ copyGitBashCompletion() {
 }
 
 copyGitBashPrompt() {
-    log info "[copyGitBashPrompt]: On copy le bashrc User"
+    log info "[copyGitBashPrompt]: On copy le git-prompt"
     if [[ ! -f ~/.git-prompt.sh ]]
     then
         cp linuxinit/git-prompt.sh ~/.git-prompt.sh
@@ -86,6 +104,11 @@ copyGitBashPrompt() {
     fi
 }
 
+addUserGrouSudoers()
+{
+  # :param: User
+  RUN echo "$1 ALL=(ALL) NOPASSWD " >> /etc/sudoers
+}
 
 copyRootBashrc() {
     log info "[copyRootBashrc]: On copy le bashrc Root"
@@ -248,6 +271,9 @@ insertPS1BashBashrc() {
 currentDistro=$(getDistro)
 userUid1000=$(getUserByUid 1000)
 
+#echo $currentDistro
+#exit;
+
 if [[ -z "$USER" ]] || [[ "$USER" == "" ]]
 then
     USER=$(whoami)
@@ -260,7 +286,7 @@ log info "---=== Debut de Configuration de becane pour User: [$USER] Distro: [$c
 
 if [[ "$USER" == "root" ]]
 then
-    if [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]] || [[ "$currentDistro" == "alpine os" ]]
+    if [[ "$currentDistro" == "debian" ]] || [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]] || [[ "$currentDistro" == "alpine os" ]]
     then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
         createConfigureSshRoot
@@ -270,6 +296,16 @@ then
         copyShAliases
         copyVimrc
         copyPsqlRc
+
+    elif [[ "$currentDistro" == "rhel" ]];
+    then
+        log info "On est sur une distro [$currentDistro] pour le [$USER]"
+        copyGitBashCompletion
+        copyGitBashPrompt
+        copyRootBashrc
+        copyShAliases
+        copyVimrc
+
     else
         log info "On est sur une distro [$currentDistro] pour le [$USER] UNKOWNW"
     fi
@@ -282,7 +318,7 @@ then
 elif [[ "$USER" == "vagrant" ]]
 then
 
-    if [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
+    if [[ "$currentDistro" == "debian" ]] || [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
     then
         copyGitBashCompletion
         copyGitBashPrompt
@@ -294,8 +330,9 @@ then
     else
         log info "On est sur une distro [$currentDistro] pour le [$USER] UNKONW"
     fi
+
 else
-    if [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
+    if [[ "$currentDistro" == "debian" ]] || [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
     then
         copyGitBashPrompt
         copyUserBashrc
@@ -303,6 +340,16 @@ else
         copyShAliases
         copyVimrc
         copyPsqlRc
+
+    elif [[ "$currentDistro" == "rhel" ]];
+    then
+        log info "On est sur une distro [$currentDistro] pour le [$USER]"
+        copyGitBashCompletion
+        copyUserBashrc
+        copyUserBashAliases
+        copyShAliases
+        copyVimrc
+
 #    else
 #        log info "On est sur une distro [$currentDistro] pour le [$USER] UNKONW"
     fi
@@ -318,5 +365,5 @@ fi
 
 
 
-cleanup
+#cleanup
 log info "---=== Fin de Configuration de becane ===---"
