@@ -364,6 +364,5 @@ else
 fi
 
 
-
-#cleanup
+cleanup
 log info "---=== Fin de Configuration de becane ===---"
