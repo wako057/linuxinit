@@ -14,8 +14,8 @@ plugins=(git virtualenv)
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-if [ -f ~/.sh_aliases ]; then
-    . ~/.sh_aliases
+if [ -f ~/.include-env ]; then
+    . ~/.include-env
 fi
 zstyle ':completion:*' menu select=2
 

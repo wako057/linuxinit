@@ -1,0 +1,16 @@
+# include all files
+if [ -f ~/.git-bash-completion.sh ]; then
+   . ~/.git-bash-completion.sh
+fi
+
+if [ -f ~/.git-prompt.sh ]; then
+   . ~/.git-prompt.sh
+fi
+
+if [ -f ~/.sh_aliases ]; then
+   . ~/.sh_aliases
+fi
+
+if [ -f ~/.init-path ]; then
+   . ~/.init-path
+fi

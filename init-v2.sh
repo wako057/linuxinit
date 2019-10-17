@@ -30,26 +30,6 @@ log () {
     fi
 }
 
-#getDistro() {
-#    local UNAME DISTRO
-#    UNAME=$(uname | tr "[:upper:]" "[:lower:]")
-#
-#    if [ "$UNAME" == "linux" ]; then
-#        if [ -f /etc/lsb-release ] && [ -d /etc/lsb-release.d ]; then
-#            log info "On a trouve des informatiosn dans lsb-release"
-#            DISTRO=$(lsb_release -i | cut -d: -f2 | sed s/'^\t'//)
-#        else # Otherwise, use release info file
-#            log info "On a pas trouve lsb-release on regarde /etc/[a-z]-_version on /etc/[a-z]-_release"
-#             # shellcheck disable=SC2010
-#            DISTRO=$(ls -d /etc/[A-Za-z]*[_-][rv]e[lr]* | grep -v "lsb" | cut -d'/' -f3 | cut -d'-' -f1 | cut -d'_' -f1)
-#        fi
-#        log info "On forge un retour a peu pres coherent"
-#        DISTRO=$(echo "$DISTRO" | tr "[:upper:]" "[:lower:]" | tr '\n' ' ' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-#    fi
-#    log info "UNAME: [$UNAME]  -  Distro: [$DISTRO]"
-#    echo "$DISTRO"
-#}
-
 # based on https://unix.stackexchange.com/questions/6345/how-can-i-get-distribution-name-and-version-number-in-a-simple-shell-script
 # modification for my usecase
 getDistro() {
@@ -104,7 +84,7 @@ copyGitBashPrompt() {
     fi
 }
 
-addUserGrouSudoers()
+addUserGroupSudoers()
 {
   # :param: User
   RUN echo "$1 ALL=(ALL) NOPASSWD " >> /etc/sudoers
@@ -165,6 +145,25 @@ copyShAliases() {
         log info "[copyShAliases][SKIP]: ~/.sh_aliases exist"
     fi
 }
+
+
+copyIncludeEnvInitPath() {
+    log info "[copyIncludeEnvInitPath]: On copy le include-env"
+    if [[ ! -f ~/.include-env ]]
+    then
+        cp linuxinit/include-env ~/.include-env
+    else
+        log info "[copyIncludeEnvInitPath][SKIP]: ~/.init-path exist"
+    fi
+
+    if [[ ! -f ~/.init-path ]]
+    then
+        cp linuxinit/init-path ~/.init-path
+    else
+        log info "[copyIncludeEnvInitPath][SKIP]: ~/.init-path exist"
+    fi
+}
+
 
 copyVimrc() {
     log info "[copyVimrc]: On copy le Vimrc"
@@ -325,6 +324,7 @@ then
         copyUserBashrc
         copyUserBashAliases
         copyShAliases
+        copyIncludeEnvInitPath
         copyVimrc
         copyPsqlRc
     else
@@ -338,6 +338,7 @@ else
         copyUserBashrc
         copyUserBashAliases
         copyShAliases
+        copyIncludeEnvInitPath
         copyVimrc
         copyPsqlRc
 
@@ -348,6 +349,7 @@ else
         copyUserBashrc
         copyUserBashAliases
         copyShAliases
+        copyIncludeEnvInitPath
         copyVimrc
 
 #    else
