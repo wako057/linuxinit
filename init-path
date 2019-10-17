@@ -1,6 +1,17 @@
 # setup path env variable
 export TERM="xterm-256color"
 
+# If you come from bash you might have to change your $PATH.
+if [[ -d ~/indb-docker ]] ; then
+  export WORKSPACE=~/indb-docker
+  export PATH=$PATH:$WORKSPACE
+fi
+
+if [ -d ~/projects ] ; then
+  export PROJECTS=~/projects
+  export PATH=$PATH:$PROJECTS
+fi
+
 if [[ -e "/usr/bin/java" ]]; then
   export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
 fi
@@ -23,19 +34,12 @@ if [[ -d "$HOME/work" ]] ; then
   export GOPATH=$HOME/work
 fi
 
-# If you come from bash you might have to change your $PATH.
-if [[ -d "~/indb-docker" ]] ; then
-  export WORKSPACE=~/indb-docker
-  export PATH=$PATH:$WORKSPACE
+if [ -d "HOME/bin" ] ; then
+  export PATH=$PATH:$HOME/bin
 fi
 
-if [ -d "~/projects" ] ; then
-  export PROJECTS=~/projects
-  export PATH=$PATH:$PROJECTS
-fi
-
-if [ -d "~/projects" ] ; then
-  export PATH=$HOME/bin:/usr/local/bin:$PATH
+if [ -d "/usr/local/bin" ] ; then
+  export PATH=$PATH:/usr/local/bin
 fi
 
 if [[ -d "~/.local/bin" ]] ; then
@@ -46,4 +50,3 @@ test_npm_exist=$(npm  2>/dev/null 1>/dev/null; echo $?)
 if [[ $test_npm_exist -eq 1 ]] ; then
   export PATH=$PATH:$(npm bin)
 fi
-
