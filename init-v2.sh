@@ -332,7 +332,7 @@ then
     fi
 
 else
-    if [[ "$currentDistro" == "debian" ]] || [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
+    if [[ "$currentDistro" == "debian" ]] || [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]] || [[ "$currentDistro" == "alpine" ]]
     then
         copyGitBashPrompt
         copyUserBashrc
