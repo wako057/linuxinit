@@ -46,6 +46,10 @@ if [[ -d "~/.local/bin" ]] ; then
   export PATH=$PATH:~/.local/bin
 fi
 
+if [[ -d "/snap/bin" ]] ; then
+  export PATH=$PATH:/snap/bin
+fi
+
 test_npm_exist=$(npm  2>/dev/null 1>/dev/null; echo $?)
 if [[ $test_npm_exist -eq 1 ]] ; then
   export PATH=$PATH:$(npm bin)
