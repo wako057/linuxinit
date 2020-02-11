@@ -317,7 +317,7 @@ then
 elif [[ "$USER" == "vagrant" ]]
 then
 
-    if [[ "$currentDistro" == "debian" ]] || [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
+    if  [[ "$currentDistro" == "ubuntu" ]] || [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
     then
         copyGitBashCompletion
         copyGitBashPrompt
@@ -332,7 +332,7 @@ then
     fi
 
 else
-    if [[ "$currentDistro" == "debian" ]] || [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]] || [[ "$currentDistro" == "alpine" ]]
+    if [[ "$currentDistro" == "ubuntu" ]] || [[ "$currentDistro" == "debian" ]] || [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]] || [[ "$currentDistro" == "alpine" ]]
     then
         copyGitBashPrompt
         copyUserBashrc
