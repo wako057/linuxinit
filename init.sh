@@ -4,7 +4,6 @@ RED="\e[31m"
 GREEN="\e[32m"
 CYAN="\e[36m"
 
-
 log () {
     # Display log messages
     # :param: Log level : error, info or debug
@@ -33,9 +32,8 @@ log () {
 # based on https://unix.stackexchange.com/questions/6345/how-can-i-get-distribution-name-and-version-number-in-a-simple-shell-script
 # modification for my usecase
 getDistro() {
-  local UNAME DISTRO
+  local DISTRO
   local OSFILE="/etc/os-release"
-  local LSBFILE="/etc/lsb-release"
 
   if [ -f $OSFILE ];
   then # freedesktop.org and systemd
@@ -60,7 +58,7 @@ getDistro() {
       VER=$(uname -r)
      DISTRO="$OS$VER"
   fi
-  echo $DISTRO
+  echo "$DISTRO"
 }
 
 
