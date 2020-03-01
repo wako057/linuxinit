@@ -15,3 +15,5 @@
  #   fixup = commit --fixup
 [color "branch"]
     upstream = cyan
+[pager]
+    branch = false
