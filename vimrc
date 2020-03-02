@@ -8,4 +8,5 @@ set shiftwidth=4
 set autoindent
 set hlsearch
 set paste
+set ruler
 au BufEnter,BufRead *.conf setf dosini
