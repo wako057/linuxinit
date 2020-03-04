@@ -42,7 +42,8 @@ copyUserBashrc() {
     log info "[copyUserBashrc]: On copy le bashrc User"
     if [[ ! -f ~/.bashrc ]]
     then
-        cp linuxinit/bash_aliases_user ~/.bashrc
+        log info "[copyUserBashrc][INIT]: ~/.bashrc doesnt exist we create it"
+        cp linuxinit/bash_aliases_user ~/.bashrc || log info "[copyUserBashrc][ERROR]: copy failed"
     else
         log info "[copyUserBashrc][SKIP]: ~/.bashrc exist - on insere dans bashrc"
     fi
@@ -54,14 +55,12 @@ copyUserBashAliases() {
 
     if [[ ! -f ~/.bashrc ]]
     then
-      log info "[copyUserBashAliases][INIT]: ~/.bashrc doesnt exist we create it"
-        cp linuxinit/bash_aliases_user ~/.bashrc || log info "[copyUserBashAliases][ERROR]: copy failed"
-    else
-        log info "[copyUserBashAliases][SKIP]: ~/.bashrc exist"
+        copyUserBashrc
     fi
 
     if [[ ! -f ~/.bash_aliases ]]
     then
+        log info "[copyUserBashAliases][INIT]: ~/.bash_aliases doesnt exist we create it"
         cp linuxinit/bash_aliases_user ~/.bash_aliases
     else
         log info "[copyUserBashAliases][SKIP]: ~/.bash_aliases exist"
@@ -137,4 +136,23 @@ copyGitconfig() {
         log info "[copyGitconfig][SKIP]: ~/.gitconfig exist"
     fi
     sed -i 's/__USERNAME__/'"$USER"'/g' ~/.gitconfig
+}
+
+copyUserEssentials() {
+    copyGitBashCompletion
+    copyUserBashAliases
+    copyShAliases
+    copyIncludeEnvInitPath
+    copyVimrc
+    copyPsqlRc
+    copyGitconfig
+}
+
+copyRootEssentials() {
+    copyGitBashCompletion
+    copyGitBashPrompt
+    copyRootBashrc
+    copyShAliases
+    copyVimrc
+    copyPsqlRc
 }
