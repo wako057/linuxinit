@@ -37,21 +37,12 @@ then
     then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
         createConfigureSshRoot
-        copyGitBashCompletion
-        copyGitBashPrompt
-        copyRootBashrc
-        copyShAliases
-        copyVimrc
-        copyPsqlRc
+        copyRootEssentials
 
     elif [[ "$currentDistro" == "rhel" ]];
     then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
-        copyGitBashCompletion
-        copyGitBashPrompt
-        copyRootBashrc
-        copyShAliases
-        copyVimrc
+        copyRootEssentials
 
     else
         log info "On est sur une distro [$currentDistro] pour le [$USER] UNKOWNW"
@@ -65,16 +56,10 @@ then
 elif [[ "$USER" == "vagrant" ]]
 then
 
-    if  [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
+    if  [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]]
     then
-        copyGitBashCompletion
         copyGitBashPrompt
-        copyUserBashrc
-        copyUserBashAliases
-        copyShAliases
-        copyIncludeEnvInitPath
-        copyVimrc
-        copyPsqlRc
+        copyUserEssentials
     else
         log info "On est sur une distro [$currentDistro] pour le [$USER] UNKONW"
     fi
@@ -82,24 +67,12 @@ then
 else
     if [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]] || [[ "$currentDistro" == "alpine" ]]
     then
-        copyGitBashPrompt
-        copyUserBashrc
-        copyUserBashAliases
-        copyShAliases
-        copyIncludeEnvInitPath
-        copyVimrc
-        copyPsqlRc
+        copyUserEssentials
 
     elif [[ "$currentDistro" == "rhel" ]];
     then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
-        copyGitBashCompletion
-        copyUserBashrc
-        copyUserBashAliases
-        copyShAliases
-        copyIncludeEnvInitPath
-        copyVimrc
-
+        copyUserEssentials
     fi
 
     if detectIfInContainer && [[ "$USER" == "jenkins" ]]
