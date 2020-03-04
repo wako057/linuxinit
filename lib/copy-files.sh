@@ -139,7 +139,6 @@ copyGitconfig() {
 }
 
 copyUserEssentials() {
-    copyGitBashCompletion
     copyUserBashAliases
     copyShAliases
     copyIncludeEnvInitPath
@@ -149,7 +148,6 @@ copyUserEssentials() {
 }
 
 copyRootEssentials() {
-    copyGitBashCompletion
     copyGitBashPrompt
     copyRootBashrc
     copyShAliases
