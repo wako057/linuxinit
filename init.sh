@@ -28,7 +28,6 @@ then
 else
     log info "USER defined [$USER]"
 fi
-
 log info "---=== Debut de Configuration de becane pour User: [$USER] Distro: [$currentDistro] homeDir[$HOME] Uid: [$UID]===---"
 
 if [[ "$USER" == "root" ]]
@@ -38,12 +37,10 @@ then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
         createConfigureSshRoot
         copyRootEssentials
-
     elif [[ "$currentDistro" == "rhel" ]];
     then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
         copyRootEssentials
-
     else
         log info "On est sur une distro [$currentDistro] pour le [$USER] UNKOWNW"
     fi
@@ -55,7 +52,6 @@ then
 
 elif [[ "$USER" == "vagrant" ]]
 then
-
     if  [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]]
     then
         copyGitBashPrompt
@@ -68,7 +64,6 @@ else
     if [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]] || [[ "$currentDistro" == "alpine" ]]
     then
         copyUserEssentials
-
     elif [[ "$currentDistro" == "rhel" ]];
     then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
@@ -81,9 +76,7 @@ else
       echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]\[\033[00m\] > '" >> /etc/bash.bashrc
 
     fi
-
 fi
-
 
 cleanup
 log info "---=== Fin de Configuration de becane ===---"
