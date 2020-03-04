@@ -38,10 +38,10 @@ log () {
                 prefix="$RED Error : "
             ;;
             info)
-                prefix=" Info : "
+                prefix="$CYAN Info : "
             ;;
             debug)
-                prefix="$CYAN Debug : "
+                prefix="$GREEN Debug : "
             ;;
             *)
                 prefix=""
