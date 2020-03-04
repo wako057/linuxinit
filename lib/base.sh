@@ -1,6 +1,20 @@
 #####################
 # General functions
 #####################
+
+function contains() {
+    local n=$#
+    local value=${!n}
+    for ((i=1;i < $#;i++)) {
+        if [ "${!i}" == "${value}" ]; then
+            echo "yes"
+            return 0
+        fi
+    }
+    echo "no"
+    return 1
+}
+
 in_array () {
     # Test if array contains the specified element
     # :param: element to search
@@ -10,6 +24,7 @@ in_array () {
     for e; do [[ "$e" == "$match" ]] && return 0; done
     return 1
 }
+
 
 log () {
     # Display log messages
