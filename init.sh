@@ -31,7 +31,7 @@ log info "---=== Debut de Configuration de becane pour User: [$USER] Distro: [$c
 
 if [[ "$USER" == "root" ]]
 then
-    if [[ "$currentDistro" == "ubuntu" ]] || [[ "$currentDistro" == "debian" ]] || [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]] || [[ "$currentDistro" == "alpine" ]]
+    if [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]] || [[ "$currentDistro" == "alpine" ]]
     then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
         createConfigureSshRoot
@@ -63,7 +63,7 @@ then
 elif [[ "$USER" == "vagrant" ]]
 then
 
-    if  [[ "$currentDistro" == "ubuntu" ]] || [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
+    if  [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]] || [[ "$currentDistro" == "debian ec2 os" ]]
     then
         copyGitBashCompletion
         copyGitBashPrompt
@@ -78,7 +78,7 @@ then
     fi
 
 else
-    if [[ "$currentDistro" == "ubuntu" ]] || [[ "$currentDistro" == "debian" ]] || [[ "$currentDistro" == "debian os" ]] || [[ "$currentDistro" == "debian ec2 os" ]] || [[ "$currentDistro" == "alpine" ]]
+    if [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]] || [[ "$currentDistro" == "alpine" ]]
     then
         copyGitBashPrompt
         copyUserBashrc
@@ -98,8 +98,6 @@ else
         copyIncludeEnvInitPath
         copyVimrc
 
-#    else
-#        log info "On est sur une distro [$currentDistro] pour le [$USER] UNKONW"
     fi
 
     if detectIfInContainer && [[ "$USER" == "jenkins" ]]
