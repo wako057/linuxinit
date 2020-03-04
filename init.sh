@@ -6,6 +6,8 @@ GREEN="\e[32m"
 CYAN="\e[36m"
 # Determine directory for current script
 HERE="$( cd "$( dirname "$0" )" >/dev/null && pwd )"
+# Debian Distribution we handle
+DEBIAN_DISTRIB=("ubuntu" "debian" "debian os" "debian ec2 os")
 
 source "${HERE}/lib/base.sh"
 source "${HERE}/lib/host.sh"
