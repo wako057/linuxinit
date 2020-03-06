@@ -38,10 +38,10 @@ installZshOhMyZsh() {
         sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
         git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
         cp .zshrc.pre-oh-my-zsh .zshrc
-        if !detectIfVirtualMachine; then
+        if ! detectIfVirtualMachine; then
             installNerdFontUbuntu
         else
-            log info "on est pas dans une machine virtuel"
+            log info "on est dans une machine virtuel"
         fi
     fi
 }
