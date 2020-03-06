@@ -53,6 +53,7 @@ elif [[ "$USER" == "vagrant" ]]; then
     if [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]]; then
         copyGitBashPrompt
         copyUserEssentials
+        installZshOhMyZsh
     else
         log info "On est sur une distro [$currentDistro] pour le [$USER] UNKONW"
     fi
@@ -60,9 +61,11 @@ elif [[ "$USER" == "vagrant" ]]; then
 else
     if [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]] || [[ "$currentDistro" == "alpine" ]]; then
         copyUserEssentials
+        installZshOhMyZsh
     elif [[ "$currentDistro" == "rhel" ]]; then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
         copyUserEssentials
+        installZshOhMyZsh
     fi
 
     if detectIfInContainer && [[ "$USER" == "jenkins" ]]; then
