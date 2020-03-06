@@ -37,6 +37,9 @@ log () {
             error)
                 prefix="$RED Error : "
             ;;
+            warn)
+                prefix="$YELLOW Warn : "
+            ;;
             info)
                 prefix="$CYAN Info : "
             ;;
