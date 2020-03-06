@@ -2,6 +2,13 @@
 # Host Related functions
 #####################
 
+# based on https://superuser.com/questions/553932/how-to-check-if-i-have-sudo-access
+doesIHaveSudoAccess() {
+    local sudoAccess
+    sudoAccess=$(timeout 2 sudo id && echo "granted" || echo "denied")
+    log info "[doesIHaveSudoAccess]: L'utilisateur courant a un acces $sudoAccess pour sudo"
+    echo $sudoAccess
+}
 
 # based on https://unix.stackexchange.com/questions/6345/how-can-i-get-distribution-name-and-version-number-in-a-simple-shell-script
 # modification for my usecase
@@ -47,6 +54,24 @@ detectIfInContainer() {
 	 return 1
  fi
 }
+
+getCurrentUserUid() {
+    # Get uid of the current User
+    local uidfound
+    uidfound=$(id -u)
+    log info "[getCurrentUserUid]: Le user courant a l'uid [$name]"
+    echo $uidfound
+}
+
+getUidByUser() {
+  # Get the username of the Uid parameters
+  # :param: Uid
+  local uidfound
+  uidfound=$(getent passwd "$1" | cut -d: -f1)
+  log info "[getUidByUser]: Le user [$1] a pour uid: [$uidfound]"
+  echo "$uidfound"
+}
+
 
 getUserByUid() {
   # Get the username of the Uid parameters

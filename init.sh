@@ -21,6 +21,25 @@ cleanup() {
 currentDistro=$(getDistro)
 userUid1000=$(getUserByUid 1000)
 
+
+
+installZshOhMyZsh() {
+    local currentUid
+    currentUid=$(getCurrentUserUid)
+
+    if [[ "$currentUid" -lt 1000 ]];
+    then
+        log error "Current User Has uid below 1000 stop install"
+        exit 1
+    else
+        copyZshrc
+        sudo apt-get install -y zsh
+        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    fi
+}
+installZshOhMyZsh
+exit;
+
 if [[ -z "$USER" ]] || [[ "$USER" == "" ]]
 then
     USER=$(whoami)
