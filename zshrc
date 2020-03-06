@@ -30,6 +30,13 @@ POWERLEVEL9K_TIME_FORMAT="%D{\ue383 %H:%M:%S \uf073 %d/%m/%y}"
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(custom_debian_icon root_indicator dir dir_writable vcs virtualenv)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status time)
 
+POWERLEVEL9K_CONTEXT_TEMPLATE="%n@`hostname -f`"
+if [[ -z "$SSH_CLIENT" ]]; then
+    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(custom_debian_icon root_indicator dir dir_writable vcs virtualenv)
+else
+    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(custom_debian_icon context root_indicator dir dir_writable vcs virtualenv)
+fi
+
 # You may need to manually set your language environment
 export LANG=fr_FR:UTF-8
 export LC_ALL="fr_FR.UTF-8"
