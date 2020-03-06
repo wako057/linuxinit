@@ -1,6 +1,6 @@
-#####################
+###########################
 # General functions
-#####################
+###########################
 
 function contains() {
     local n=$#
@@ -36,6 +36,9 @@ log () {
         case "$1" in
             error)
                 prefix="$RED Error : "
+            ;;
+            warn)
+                prefix="$YELLOW Warn : "
             ;;
             info)
                 prefix="$CYAN Info : "
