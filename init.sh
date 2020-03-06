@@ -32,6 +32,11 @@ installOhMyZsh() {
     log info "To change your shell: chsh -s $(which zsh)"
 }
 
+installPowerLevel9k() {
+    log info "[installPowerLevel9k] Install powerlevel9k"
+    git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
+}
+
 installZshOhMyZsh() {
     local currentUid
     currentUid=$(getCurrentUserUid)
@@ -42,9 +47,9 @@ installZshOhMyZsh() {
     else
         sudo apt-get install -y zsh
         installOhMyZsh
-        git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
-        cp .zshrc.pre-oh-my-zsh .zshrc
-        if ! detectIfVirtualMachine && ! detectIfInContainer; then
+        installPowerLevel9k
+
+       if ! detectIfVirtualMachine && ! detectIfInContainer; then
             installNerdFontUbuntu
         else
 
