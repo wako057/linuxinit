@@ -29,7 +29,7 @@ installOhMyZsh() {
 #    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
     copyZshrc
-    log info "To change your shell: chsh -s $(which zsh)"
+    log warn "[installOhMyZsh]: To change your shell: chsh -s $(which zsh)"
 }
 
 installPowerLevel9k() {
