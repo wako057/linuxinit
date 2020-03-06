@@ -25,6 +25,13 @@ installNerdFontUbuntu() {
     mkdir -p ~/.local/share/fonts
 }
 
+installOhMyZsh() {
+#    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
+    copyZshrc
+    log info "To change your shell: chsh -s $(which zsh)"
+}
+
 installZshOhMyZsh() {
     local currentUid
     currentUid=$(getCurrentUserUid)
@@ -33,15 +40,15 @@ installZshOhMyZsh() {
         log error "Current User Has uid below 1000 stop install"
         exit 1
     else
-        copyZshrc
         sudo apt-get install -y zsh
-        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+        installOhMyZsh
         git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
         cp .zshrc.pre-oh-my-zsh .zshrc
-        if ! detectIfVirtualMachine; then
+        if ! detectIfVirtualMachine && ! detectIfInContainer; then
             installNerdFontUbuntu
         else
-            log info "on est dans une machine virtuel"
+
+            log info "[installZshOhMyZsh][SKIP][Nerd Font]: On est dans une VM ou un container"
         fi
     fi
 }
