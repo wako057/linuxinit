@@ -41,6 +41,18 @@ getDistro() {
     echo "$DISTRO"
 }
 
+detectIfVirtualMachine() {
+    local result
+    result=$(systemd-detect-virt)
+    if [[ result != "none" ]]; then
+        log info "[detectIfVirtualMachine]: On est dans une machine virtuel"
+        return 0
+    else
+        log info "[detectIfVirtualMachine]: On est PAS dans une machine virtuel"
+        return 1
+    fi
+}
+
 detectIfInContainer() {
     local chk
     chk=$(grep -cE '/(lxc|docker)/[[:xdigit:]]{64}' /proc/1/cgroup)
