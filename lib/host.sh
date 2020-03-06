@@ -69,7 +69,7 @@ getCurrentUserUid() {
     # Get uid of the current User
     local uidfound
     uidfound=$(id -u)
-    log info "[getCurrentUserUid]: Le user courant a l'uid [uidfound]"
+    log info "[getCurrentUserUid]: Le user courant a l'uid [$(uidfound)]"
     echo $uidfound
 }
 
