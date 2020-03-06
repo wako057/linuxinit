@@ -13,46 +13,44 @@ doesIHaveSudoAccess() {
 # based on https://unix.stackexchange.com/questions/6345/how-can-i-get-distribution-name-and-version-number-in-a-simple-shell-script
 # modification for my usecase
 getDistro() {
-  local DISTRO
-  local OSFILE="/etc/os-release"
+    local DISTRO
+    local OSFILE="/etc/os-release"
 
-  if [ -f $OSFILE ];
-  then # freedesktop.org and systemd
-    DISTRO=$(grep "^ID=" /etc/os-release | tr -d '"' | sed -e 's/ID=//' | tr "[:upper:]" "[:lower:]")
-    log info "[getDistro]: On cat /etc/release"
-  elif type lsb_release >/dev/null 2>&1; then
-    DISTRO=$(lsb_release -i | cut -d: -f2 | sed s/'^\t'// | tr "[:upper:]" "[:lower:]")
-    log info "[getDistro]: On utilise la commande lsb_release"
-  elif [ -f /etc/lsb-release ]; then # For some versions of Debian/Ubuntu without lsb_release command
-    DISTRO=DISTRO=$(grep "^DISTRIB_ID=" /etc/os-release | sed -e 's/^DISTRIB_ID="//' -e 's/"$//')
-    log info "[getDistro]: On cat /etc/debian_version: Old debian $VER"
-  elif [ -f /etc/debian_version ]; then # Older Debian/Ubuntu/etc.
-    VER=$(cat /etc/debian_version)
-    log info "[getDistro]: On cat /etc/debian_version: Old debian $VER"
-    DISTRO="debian"
-#  elif [ -f /etc/SuSe-release ]; then
-      # Older SuSE/etc.
-#  elif [ -f /etc/redhat-release ]; then
-      # Older Red Hat, CentOS, etc.
-  else
-      OS=$(uname -s)
-      VER=$(uname -r)
-     DISTRO="$OS$VER"
-  fi
-  echo "$DISTRO"
+    if [ -f $OSFILE ]; then # freedesktop.org and systemd
+        DISTRO=$(grep "^ID=" /etc/os-release | tr -d '"' | sed -e 's/ID=//' | tr "[:upper:]" "[:lower:]")
+        log info "[getDistro]: On cat /etc/release"
+    elif type lsb_release >/dev/null 2>&1; then
+        DISTRO=$(lsb_release -i | cut -d: -f2 | sed s/'^\t'// | tr "[:upper:]" "[:lower:]")
+        log info "[getDistro]: On utilise la commande lsb_release"
+    elif [ -f /etc/lsb-release ]; then # For some versions of Debian/Ubuntu without lsb_release command
+        DISTRO=DISTRO=$(grep "^DISTRIB_ID=" /etc/os-release | sed -e 's/^DISTRIB_ID="//' -e 's/"$//')
+        log info "[getDistro]: On cat /etc/debian_version: Old debian $VER"
+    elif [ -f /etc/debian_version ]; then # Older Debian/Ubuntu/etc.
+        VER=$(cat /etc/debian_version)
+        log info "[getDistro]: On cat /etc/debian_version: Old debian $VER"
+        DISTRO="debian"
+        #  elif [ -f /etc/SuSe-release ]; then
+        # Older SuSE/etc.
+        #  elif [ -f /etc/redhat-release ]; then
+        # Older Red Hat, CentOS, etc.
+    else
+        OS=$(uname -s)
+        VER=$(uname -r)
+        DISTRO="$OS$VER"
+    fi
+    echo "$DISTRO"
 }
 
 detectIfInContainer() {
- local chk
- chk=$(grep -cE '/(lxc|docker)/[[:xdigit:]]{64}' /proc/1/cgroup)
- if [[ $chk -gt 0 ]]
- then
-   log info "[detectIfInContainer]: On est dans un container"
-	 return 0
- else
-   log info "[detectIfInContainer]: On est PAS dans un container"
-	 return 1
- fi
+    local chk
+    chk=$(grep -cE '/(lxc|docker)/[[:xdigit:]]{64}' /proc/1/cgroup)
+    if [[ $chk -gt 0 ]]; then
+        log info "[detectIfInContainer]: On est dans un container"
+        return 0
+    else
+        log info "[detectIfInContainer]: On est PAS dans un container"
+        return 1
+    fi
 }
 
 getCurrentUserUid() {
@@ -64,36 +62,31 @@ getCurrentUserUid() {
 }
 
 getUidByUser() {
-  # Get the username of the Uid parameters
-  # :param: Uid
-  local uidfound
-  uidfound=$(getent passwd "$1" | cut -d: -f1)
-  log info "[getUidByUser]: Le user [$1] a pour uid: [$uidfound]"
-  echo "$uidfound"
+    # Get the username of the Uid parameters
+    # :param: Uid
+    local uidfound
+    uidfound=$(getent passwd "$1" | cut -d: -f1)
+    log info "[getUidByUser]: Le user [$1] a pour uid: [$uidfound]"
+    echo "$uidfound"
 }
-
 
 getUserByUid() {
-  # Get the username of the Uid parameters
-  # :param: Uid
-  local name
-  name=$(getent passwd "$1" | cut -d: -f1)
-  log info "[getUserByUid]: Le user avec l'uid [$1] est: [$name]"
-  echo "$name"
+    # Get the username of the Uid parameters
+    # :param: Uid
+    local name
+    name=$(getent passwd "$1" | cut -d: -f1)
+    log info "[getUserByUid]: Le user avec l'uid [$1] est: [$name]"
+    echo "$name"
 }
 
-
-addUserGroupSudoers()
-{
-  # :param: User
-  RUN echo "$1 ALL=(ALL) NOPASSWD " >> /etc/sudoers
+addUserGroupSudoers() {
+    # :param: User
+    RUN echo "$1 ALL=(ALL) NOPASSWD " >>/etc/sudoers
 }
 
 createConfigureSshRoot() {
-    if [[ "$USER" == "root" ]]
-    then
-        if [[ ! -d /root/.ssh ]]
-        then
+    if [[ "$USER" == "root" ]]; then
+        if [[ ! -d /root/.ssh ]]; then
             log info "[createConfigureSshRoot]: On cree le reperoire ssh"
             mkdir -p /root/.ssh
         else
@@ -104,14 +97,13 @@ createConfigureSshRoot() {
     fi
 }
 
-
 insertPS1BashBashrc() {
-  log info "[insertPS1BashBashrc]: Cas particulier on dirait, on force le bash.bashrc"
+    log info "[insertPS1BashBashrc]: Cas particulier on dirait, on force le bash.bashrc"
 
-  {
-    echo "########### CUSTOM /etc/bash.bashrc due to no healthy HOME ###########"
-    echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]\[\033[00m\] > '"
-    cat ./linuxinit/sh_aliases
-  } >> /etc/bash.bashrc
+    {
+        echo "########### CUSTOM /etc/bash.bashrc due to no healthy HOME ###########"
+        echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]\[\033[00m\] > '"
+        cat ./linuxinit/sh_aliases
+    } >>/etc/bash.bashrc
 
 }

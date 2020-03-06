@@ -5,7 +5,7 @@ RED="\e[31m"
 GREEN="\e[32m"
 CYAN="\e[36m"
 # Determine directory for current script
-HERE="$( cd "$( dirname "$0" )" >/dev/null && pwd )"
+HERE="$(cd "$(dirname "$0")" >/dev/null && pwd)"
 # Debian Distribution we handle
 DEBIAN_DISTRIB=("ubuntu" "debian" "debian os" "debian ec2 os")
 
@@ -21,27 +21,30 @@ cleanup() {
 currentDistro=$(getDistro)
 userUid1000=$(getUserByUid 1000)
 
-
+installNerdFontUbuntu() {
+    mkdir -p ~/.local/share/fonts
+}
 
 installZshOhMyZsh() {
     local currentUid
     currentUid=$(getCurrentUserUid)
 
-    if [[ "$currentUid" -lt 1000 ]];
-    then
+    if [[ "$currentUid" -lt 1000 ]]; then
         log error "Current User Has uid below 1000 stop install"
         exit 1
     else
         copyZshrc
         sudo apt-get install -y zsh
         sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+        git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
+        cp .zshrc.pre-oh-my-zsh .zshrc
+        installNerdFontUbuntu
     fi
 }
 installZshOhMyZsh
-exit;
+exit
 
-if [[ -z "$USER" ]] || [[ "$USER" == "" ]]
-then
+if [[ -z "$USER" ]] || [[ "$USER" == "" ]]; then
     USER=$(whoami)
     log info "USER Not defined on essaye whoami [$USER]"
 else
@@ -49,30 +52,24 @@ else
 fi
 log info "---=== Debut de Configuration de becane pour User: [$USER] Distro: [$currentDistro] homeDir[$HOME] Uid: [$UID]===---"
 
-if [[ "$USER" == "root" ]]
-then
-    if [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]] || [[ "$currentDistro" == "alpine" ]]
-    then
+if [[ "$USER" == "root" ]]; then
+    if [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]] || [[ "$currentDistro" == "alpine" ]]; then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
         createConfigureSshRoot
         copyRootEssentials
-    elif [[ "$currentDistro" == "rhel" ]];
-    then
+    elif [[ "$currentDistro" == "rhel" ]]; then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
         copyRootEssentials
     else
         log info "On est sur une distro [$currentDistro] pour le [$USER] UNKOWNW"
     fi
 
-    if [[ "$userUid1000" == "jenkins" ]] && detectIfInContainer
-    then
-      insertPS1BashBashrc
+    if [[ "$userUid1000" == "jenkins" ]] && detectIfInContainer; then
+        insertPS1BashBashrc
     fi
 
-elif [[ "$USER" == "vagrant" ]]
-then
-    if  [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]]
-    then
+elif [[ "$USER" == "vagrant" ]]; then
+    if [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]]; then
         copyGitBashPrompt
         copyUserEssentials
     else
@@ -80,19 +77,16 @@ then
     fi
 
 else
-    if [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]] || [[ "$currentDistro" == "alpine" ]]
-    then
+    if [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]] || [[ "$currentDistro" == "alpine" ]]; then
         copyUserEssentials
-    elif [[ "$currentDistro" == "rhel" ]];
-    then
+    elif [[ "$currentDistro" == "rhel" ]]; then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
         copyUserEssentials
     fi
 
-    if detectIfInContainer && [[ "$USER" == "jenkins" ]]
-    then
-      echo "on est dans un container JENKINS ON on agit en consequence"
-      echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]\[\033[00m\] > '" >> /etc/bash.bashrc
+    if detectIfInContainer && [[ "$USER" == "jenkins" ]]; then
+        echo "on est dans un container JENKINS ON on agit en consequence"
+        echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]\[\033[00m\] > '" >>/etc/bash.bashrc
 
     fi
 fi
