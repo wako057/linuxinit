@@ -1,6 +1,6 @@
-#####################
+###########################
 # Copy files functions
-#####################
+###########################
 
 copyGitBashCompletion() {
     log info "[copyGitBashCompletion]: On copy le bashrc User"

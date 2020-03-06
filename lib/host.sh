@@ -1,6 +1,6 @@
-#####################
+###########################
 # Host Related functions
-#####################
+###########################
 
 # based on https://superuser.com/questions/553932/how-to-check-if-i-have-sudo-access
 doesIHaveSudoAccess() {
