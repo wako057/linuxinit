@@ -23,7 +23,16 @@ currentDistro=$(getDistro)
 userUid1000=$(getUserByUid 1000)
 
 installNerdFontUbuntu() {
-    mkdir -p ~/.local/share/fonts
+    local fontVersion localFontDir
+
+    fontVersion="2.1.0"
+    localFontDir=~/.local/share/fonts/NerdFonts
+
+    sudo apt-get install -y unzip
+    mkdir -p $localFontDir
+    cd $localFontDir
+    w -OsL https://github.com/ryanoasis/nerd-fonts/releases/download/v$(fontVersion)/UbuntuMono.zip
+    unzip UbuntuMono.zip
 }
 
 installOhMyZsh() {
@@ -53,12 +62,11 @@ installZshOhMyZsh() {
        if ! detectIfVirtualMachine && ! detectIfInContainer; then
             installNerdFontUbuntu
         else
-
             log info "[installZshOhMyZsh][SKIP][Nerd Font]: On est dans une VM ou un container"
         fi
     fi
 }
-installZshOhMyZsh
+installNerdFontUbuntu
 exit
 
 if [[ -z "$USER" ]] || [[ "$USER" == "" ]]; then
