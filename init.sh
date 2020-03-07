@@ -53,7 +53,7 @@ elif [[ "$USER" == "vagrant" ]]; then
     if [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]]; then
         copyGitBashPrompt
         copyUserEssentials
-        installZshOhMyZsh
+
     else
         log info "On est sur une distro [$currentDistro] pour le [$USER] UNKONW"
     fi
@@ -61,11 +61,9 @@ elif [[ "$USER" == "vagrant" ]]; then
 else
     if [[ $(contains "${DEBIAN_DISTRIB[@]}" "$currentDistro") == "yes" ]] || [[ "$currentDistro" == "alpine" ]]; then
         copyUserEssentials
-        installZshOhMyZsh
     elif [[ "$currentDistro" == "rhel" ]]; then
         log info "On est sur une distro [$currentDistro] pour le [$USER]"
         copyUserEssentials
-        installZshOhMyZsh
     fi
 
     if detectIfInContainer && [[ "$USER" == "jenkins" ]]; then
@@ -73,6 +71,10 @@ else
         echo "PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\] [\D{%T}] \[\033[01;34m\]\w\[\033[00m\]\[\033[36;40m\]\[\033[00m\] > '" >>/etc/bash.bashrc
 
     fi
+fi
+
+if $# eq 1 && [[ $1 == "--zsh" ]]; then
+    installZshOhMyZsh
 fi
 
 cleanup
