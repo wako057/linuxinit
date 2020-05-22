@@ -21,3 +21,9 @@ alias dockerpsa='docker ps -a --format "table {{.Names}}\t{{.ID}}\t{{.Command}}\
 
 alias sshdocker='docker exec -i -t '
 alias syslog='sudo tail -f /var/log/syslog | ccze -A'
+
+function myipaddr() {
+ip -j addr show | jq -r '["Nb", "Name", "Type", "IpV4", "BroadcastV4", "IpV6", "BroadcastV6", "IpAliases"], ["---", "---------------", "---------", "-------------", "-------------", "-----------------", "-----------------", "----------------"],(.[] | [.ifindex, .ifname, .link_type, .addr_info[0].local? // "null", .addr_info[0].broadcast? // "null", .address? // "null", .broadcast? // "null", ([.addr_info[].local] | join("/"))? // "null"]) |@tsv'|column -t;
+}
+
+alias addr=myipaddr
