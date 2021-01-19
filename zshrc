@@ -9,7 +9,7 @@ export WORKSPACE=~/projects
 ZSH_THEME="powerlevel9k/powerlevel9k"
 POWERLEVEL9K_MODE='nerdfont-complete'
 
-plugins=(git virtualenv)
+plugins=(git virtualenv docker docker-compose)
 
 source $ZSH/oh-my-zsh.sh
 
