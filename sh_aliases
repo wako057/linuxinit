@@ -27,3 +27,4 @@ ip -j addr show | jq -r '["Nb", "Name", "Type", "IpV4", "BroadcastV4", "IpV6", "
 }
 
 alias addr=myipaddr
+alias clock='tty-clock -sc'
