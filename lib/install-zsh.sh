@@ -11,7 +11,7 @@ installNerdFontUbuntu() {
     sudo apt-get install -y unzip
     mkdir -p $localFontDir
     cd $localFontDir
-    w -OsL https://github.com/ryanoasis/nerd-fonts/releases/download/v$(fontVersion)/UbuntuMono.zip
+    curl -OsL https://github.com/ryanoasis/nerd-fonts/releases/download/v$(fontVersion)/UbuntuMono.zip
     unzip UbuntuMono.zip
     rm UbuntuMono.zip
     cd -
