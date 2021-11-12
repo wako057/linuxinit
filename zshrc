@@ -1,6 +1,6 @@
 # If you come from bash you might have to change your $PATH.
 export ZSH="/home/__USERNAME__/.oh-my-zsh"
-npm 2>&1 > /dev/null && export PATH=$PATH:$(npm bin)
+npm > /dev/null 2>&1 && export PATH=$PATH:$(npm bin)
 export PATH=~/.local/bin:$PATH
 export TERM="xterm-256color"
 export WORKSPACE=~/projects
