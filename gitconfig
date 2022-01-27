@@ -12,6 +12,7 @@
     amend = commit --amend
     continue = rebase --continue
     unstage = reset HEAD --
+    ls = log -n 54 --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
  #   fixup = commit --fixup
 [color "branch"]
     upstream = cyan
