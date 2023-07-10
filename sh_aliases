@@ -1,6 +1,6 @@
 # aliases cross shell
 
-if [ "$OSTYPE" == linux-gnu ]; then  # Is this the Ubuntu system?
+if [[ "$OSTYPE" == linux-gnu ]]; then  # Is this the Ubuntu system?
     alias l='ls -lh --color=auto --group-directories-first'
     alias la='ls -lha --color=auto --group-directories-first'
 else
