@@ -1,6 +1,13 @@
 # aliases cross shell
-alias l='ls -lh --color=auto --group-directories-first'
-alias la='ls -lha --color=auto --group-directories-first'
+
+if [ "$OSTYPE" == linux-gnu ]; then  # Is this the Ubuntu system?
+    alias l='ls -lh --color=auto --group-directories-first'
+    alias la='ls -lha --color=auto --group-directories-first'
+else
+    alias l='gls -lh --color=auto --group-directories-first'
+    alias la='gls -lha --color=auto --group-directories-first'
+fi
+
 alias vi='vim'
 
 #[[ $(grep --color=auto 2>/dev/null) ]] && alias grep='grep --color=auto'
