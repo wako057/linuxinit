@@ -1,4 +1,5 @@
 # aliases cross shell
+export EDITOR=vim
 
 if [[ "$OSTYPE" == linux-gnu ]]; then  # Is this the Ubuntu system?
     alias l='ls -lh --color=auto --group-directories-first'
@@ -35,3 +36,4 @@ ip -j addr show | jq -r '["Nb", "Name", "Type", "IpV4", "BroadcastV4", "IpV6", "
 
 alias addr=myipaddr
 alias clock='tty-clock -sc'
+alias hl='rg --passthru'
