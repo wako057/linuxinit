@@ -1,9 +1,9 @@
 [user]
-	name =
-	email =
+    name =
+    email =
 [core]
-	excludesfile = /home/__USERNAME__/.gitignore
-	editor = vim
+    excludesfile = /home/__USERNAME__/.gitignore
+    editor = vim
 [alias]
     co = commit
     ch = checkout
@@ -21,3 +21,5 @@
 [pager]
     branch = false
     log = false
+[push]
+    autoSetupRemote = true
