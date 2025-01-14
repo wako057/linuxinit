@@ -23,3 +23,5 @@
     log = false
 [push]
     autoSetupRemote = true
+[init]
+    defaultBranch = master
