@@ -13,6 +13,7 @@
     continue = rebase --continue
     unstage = reset HEAD --
     ls = log -n 54 --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+    synctag = "!git tag -l | xargs git tag -d && git fetch origin --tags"
  #   fixup = commit --fixup
 #[init]
 #    defaultBranch = main
